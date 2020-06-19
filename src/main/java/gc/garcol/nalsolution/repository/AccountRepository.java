@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 /**
  * @author thai-van
  **/
@@ -25,7 +27,13 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             ", ac.password = :#{#account.password} " +
             "WHERE ac.id = :#{#account.id}"
     )
-    void update(@Param("account") Account account);
+    int update(@Param("account") Account account);
+
+    Optional<Account> findAccountByEmail(String email);
+
+    boolean existsAccountById(Long id);
+
+    boolean existsAccountByEmail(String email);
 
 }
 

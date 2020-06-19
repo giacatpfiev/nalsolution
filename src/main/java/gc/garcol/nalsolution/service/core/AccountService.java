@@ -14,7 +14,7 @@ public interface AccountService {
      */
     Account create(Account account);
 
-    Account save(Account account);
+    int update(Account account);
 
     Account findById(Long id);
 
@@ -24,6 +24,6 @@ public interface AccountService {
 
     boolean existedAccount(String email);
 
-    boolean deleteAccount(Long id);
+    void deleteAccount(Long id);
 
 }

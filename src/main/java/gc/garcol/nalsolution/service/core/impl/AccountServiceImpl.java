@@ -1,13 +1,17 @@
 package gc.garcol.nalsolution.service.core.impl;
 
 import gc.garcol.nalsolution.entity.Account;
+import gc.garcol.nalsolution.exception.NotFoundException;
 import gc.garcol.nalsolution.manager.IDGeneratorManager;
 import gc.garcol.nalsolution.repository.AccountRepository;
+import gc.garcol.nalsolution.service.CommonRepositoryService;
 import gc.garcol.nalsolution.service.core.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 /**
  * @author thai-van
@@ -22,41 +26,56 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
 
+    private final CommonRepositoryService commonRepositoryService;
+
     @Override
     public Account create(Account account) {
         Long accountId = idGeneratorManager.getAndIncrease(Account.class);
         account.setId(accountId);
-        accountRepository.save(account);
+//        accountRepository.save(account);
+        commonRepositoryService.runInSession(session -> session.persist(account));
         return account;
     }
 
     @Override
-    public Account save(Account account) {
-        return null;
+    public int update(Account account) {
+        return accountRepository.update(account);
     }
 
     @Override
     public Account findById(Long id) {
-        return null;
+        Optional<Account> accountOpt = accountRepository.findById(id);
+        return accountOpt
+                .orElseThrow(
+                        () -> new NotFoundException(
+                                "AccountServiceImpl -> findById. Message - id: " + id
+                        )
+                );
     }
 
     @Override
     public Account findByEmail(String email) {
-        return null;
+        Optional<Account> accountOpt = accountRepository.findAccountByEmail(email);
+        return accountOpt
+                .orElseThrow(
+                        () -> new NotFoundException(
+                                "AccountServiceImpl -> findByEmail. Message - email: " + email
+                        )
+                );
     }
 
     @Override
     public boolean existedAccount(Long id) {
-        return false;
+        return accountRepository.existsAccountById(id);
     }
 
     @Override
     public boolean existedAccount(String email) {
-        return false;
+        return accountRepository.existsAccountByEmail(email);
     }
 
     @Override
-    public boolean deleteAccount(Long id) {
-        return false;
+    public void deleteAccount(Long id) {
+        accountRepository.deleteById(id);
     }
 }
