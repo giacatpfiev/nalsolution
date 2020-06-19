@@ -29,7 +29,7 @@ public class AccountRespositoryTest {
     @Test
     public void updateAccount() {
         log.info("AccountRespositoryTest -> updateAccount. ============ INIT DATA ============");
-        Long accountId = idGeneratorManager.getAndIncrease(Account.class);
+        Long accountId = idGeneratorManager.increaseAndGet(Account.class);
         String email = "updateAccount@gmail.com";
 
         Account initAccount = Account.builder()

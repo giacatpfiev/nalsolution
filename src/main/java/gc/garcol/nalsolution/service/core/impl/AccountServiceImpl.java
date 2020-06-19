@@ -30,16 +30,25 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account create(Account account) {
-        Long accountId = idGeneratorManager.getAndIncrease(Account.class);
+
+        Long accountId = idGeneratorManager.increaseAndGet(Account.class);
         account.setId(accountId);
-//        accountRepository.save(account);
+
         commonRepositoryService.runInSession(session -> session.persist(account));
+        log.info("AccountServiceImpl -> create. Message - new account: {}", account);
+
         return account;
+
     }
 
     @Override
     public int update(Account account) {
-        return accountRepository.update(account);
+
+        int changed = accountRepository.update(account);
+        log.info("AccountServiceImpl -> update. Message - account: {}, changed: {}", account, changed);
+
+        return changed;
+
     }
 
     @Override
@@ -78,4 +87,5 @@ public class AccountServiceImpl implements AccountService {
     public void deleteAccount(Long id) {
         accountRepository.deleteById(id);
     }
+
 }

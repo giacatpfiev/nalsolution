@@ -23,11 +23,12 @@ public class IDGeneratorManager {
      * @param clazz
      * @return next ID value related to clazz
      */
-    public Long getAndIncrease(Class<?> clazz) {
+    public Long increaseAndGet(Class<?> clazz) {
 
-        if (!IDs.containsKey(clazz)) throw new ServerErrorException("IDGeneratorManager -> getAndIncrease. Not found: " + clazz);
+        if (!IDs.containsKey(clazz)) throw new ServerErrorException("IDGeneratorManager -> increaseAndGet. Not found: " + clazz);
         AtomicLong currentID = IDs.get(clazz);
         return currentID.incrementAndGet();
+
     }
 
     /**
@@ -52,9 +53,11 @@ public class IDGeneratorManager {
      */
     @SneakyThrows
     public Method getRegisterMethod() {
+        
         String registerMethodName = "registerGenerator";
         Method method = getClass().getDeclaredMethod(registerMethodName, Class.class, Long.class);
         return method;
+
     }
 
 }

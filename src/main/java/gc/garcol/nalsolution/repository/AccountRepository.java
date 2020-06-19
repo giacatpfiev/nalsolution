@@ -18,6 +18,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     /**
      * Update all fields except id and email.
      * Require run in a transaction.
+     *
      * @param account
      */
     @Modifying

@@ -35,4 +35,15 @@ public class Work {
     @JoinColumn(name = "account_id")
     private Account account;
 
+    @Override
+    public String toString() {
+        return "Work{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", status=" + status +
+                ", accountID=" + account.getId() +
+                '}';
+    }
 }
