@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 /**
  * @author thai-van
@@ -43,7 +44,7 @@ public class Work {
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", status=" + status +
-                ", accountID=" + account.getId() +
+                ", accountID=" + (Objects.nonNull(account) ? account.getId() : "none") +
                 '}';
     }
 }
