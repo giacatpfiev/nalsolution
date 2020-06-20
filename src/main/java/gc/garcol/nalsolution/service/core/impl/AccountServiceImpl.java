@@ -8,6 +8,7 @@ import gc.garcol.nalsolution.service.CommonRepositoryService;
 import gc.garcol.nalsolution.service.core.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +21,11 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@CacheConfig(cacheNames = {"ACCOUNT_ID", "ACCOUNT_EMAIL"})
 public class AccountServiceImpl implements AccountService {
+
+    static final String CACHE_ID = "ACCOUNT_ID";
+    static final String CACHE_EMAIL = "ACCOUNT_EMAIL";
 
     private final IDGeneratorManager idGeneratorManager;
 
@@ -29,6 +34,10 @@ public class AccountServiceImpl implements AccountService {
     private final CommonRepositoryService commonRepositoryService;
 
     @Override
+    @Caching(put = {
+        @CachePut(cacheNames = CACHE_ID, key = "#account.id"),
+        @CachePut(cacheNames = CACHE_EMAIL, key = "#account.email")
+    })
     public Account create(Account account) {
 
         Long accountId = idGeneratorManager.increaseAndGet(Account.class);
@@ -42,6 +51,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @CacheEvict(cacheNames = CACHE_ID, key = "#account.id")
     public int update(Account account) {
 
         int changed = accountRepository.update(account);
@@ -52,6 +62,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Cacheable(cacheNames = CACHE_ID, unless = "#result == null", key = "#id")
     public Account findById(Long id) {
         Optional<Account> accountOpt = accountRepository.findById(id);
         return accountOpt
@@ -63,6 +74,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Cacheable(cacheNames = CACHE_EMAIL, unless = "#result == null", key = "#email")
     public Account findByEmail(String email) {
         Optional<Account> accountOpt = accountRepository.findAccountByEmail(email);
         return accountOpt
@@ -84,6 +96,9 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Caching(evict = {
+        @CacheEvict(cacheNames = CACHE_ID, key = "#id")
+    })
     public void deleteAccount(Long id) {
         accountRepository.deleteById(id);
     }

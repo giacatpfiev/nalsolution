@@ -40,6 +40,7 @@ public class AccountServiceTest {
         log.info("AccountServiceTest -> findByIdWithExistedAccount. ======= TEST ========");
         Long id = account.getId();
         Account persistedAccount = accountService.findById(id);
+        Account persistedAccount1 = accountService.findById(id);
         Assert.assertNotNull(persistedAccount);
     }
 
