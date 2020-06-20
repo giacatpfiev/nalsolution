@@ -179,7 +179,7 @@ public class WorkServiceTest {
         OrderBy orderBy = OrderBy.DES;
         String sortBy = "name";
 
-        List<Work> works = workService.getSomeByUID(accountId, pageIndex, pageSize, sortBy, orderBy);
+        List<Work> works = workService.getSomeByUID(accountId, pageIndex, pageSize, sortBy, orderBy).toList();
 
         int size = works.size();
         for (int i = 0; i < size - 1; i++) {
@@ -198,7 +198,7 @@ public class WorkServiceTest {
         OrderBy orderBy = OrderBy.DES;
         String sortBy = "Name";
 
-        List<Work> works = workService.getSomeByUID(-1L, pageIndex, pageSize, sortBy, orderBy);
+        workService.getSomeByUID(-1L, pageIndex, pageSize, sortBy, orderBy);
     }
 
     @Test

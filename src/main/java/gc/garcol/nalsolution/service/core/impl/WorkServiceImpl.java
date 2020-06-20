@@ -67,13 +67,13 @@ public class WorkServiceImpl implements WorkService {
     }
 
     @Override
-    public List<Work> getSomeByUID(Long uId, int pageIndex, int pageSize, String sortBy, OrderBy orderBy) {
+    public Page<Work> getSomeByUID(Long uId, int pageIndex, int pageSize, String sortBy, OrderBy orderBy) {
 
         PAGINATION.ensureExistedField(Work.class, sortBy);
         Pageable pageable = PAGINATION.of(pageIndex, pageSize, sortBy, orderBy);
         Page<Work> workPage = workRepository.getSomeByUID(uId, pageable);
 
-        return workPage.toList();
+        return workPage;
     }
 
     @Override

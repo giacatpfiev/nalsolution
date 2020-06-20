@@ -2,6 +2,7 @@ package gc.garcol.nalsolution.service.core;
 
 import gc.garcol.nalsolution.entity.Work;
 import gc.garcol.nalsolution.enums.page.OrderBy;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public interface WorkService {
 
     Work findById(Long id);
 
-    List<Work> getSomeByUID(Long uId, int pageIndex, int pageSize, String sortBy, OrderBy orderBy);
+    Page<Work> getSomeByUID(Long uId, int pageIndex, int pageSize, String sortBy, OrderBy orderBy);
 
     List<Work> getAllByUID(Long uId);
 
