@@ -33,6 +33,7 @@ public class SimpleUserDetail implements UserDetails {
 
     public static SimpleUserDetail of(Account account) {
         return SimpleUserDetail.builder()
+                .id(account.getId())
                 .email(account.getEmail())
                 .isEnable(true)
                 .secretKey("garcol")

@@ -2,7 +2,6 @@ package gc.garcol.nalsolution.endpoint;
 
 import gc.garcol.nalsolution.authentication.SimpleUserDetail;
 import gc.garcol.nalsolution.entity.Work;
-import gc.garcol.nalsolution.exception.BadRequestException;
 import gc.garcol.nalsolution.mapper.WorkMapper;
 import gc.garcol.nalsolution.payload.req.RequestWork;
 import gc.garcol.nalsolution.payload.req.RequestWorkPage;
@@ -67,7 +66,7 @@ public class WorkRestController {
     public ResponseEntity<ResponseWork> getOne(@AuthenticationPrincipal SimpleUserDetail currentUser,
                                                @PathVariable("workId") Long workId) {
 
-        log.info("WorkRestController -> createWork. Message - uId: {}, req: {}", currentUser.getId(), workId);
+        log.info("WorkRestController -> getOne. Message - uId: {}, req: {}", currentUser.getId(), workId);
 
         Work work = workService.findByIdAndAccountId(workId, currentUser.getId());
         ResponseWork res = mapper.map(work);
@@ -80,13 +79,24 @@ public class WorkRestController {
     public ResponseEntity update(@AuthenticationPrincipal SimpleUserDetail currentUser,
                                  @Valid @RequestBody RequestWork req) {
 
-        log.info("WorkRestController -> createWork. Message - uId: {}, req: {}", currentUser.getId(), req);
+        log.info("WorkRestController -> update. Message - uId: {}, req: {}", currentUser.getId(), req);
 
         Assert.notNull(req.getId());
         Assert.isTrue(req.getEndTime().compareTo(req.getStartTime()) >= 0, "startTime > endTime");
 
         Work work = mapper.map(req);
         workService.update(currentUser.getId(), work);
+
+        return ResponseEntity.ok().build();
+
+    }
+
+    @DeleteMapping("/{workId}")
+    public ResponseEntity delete(@AuthenticationPrincipal SimpleUserDetail currentUser,
+                                 @PathVariable("workId") Long workId) {
+        log.info("WorkRestController -> delete. Message - uId: {}, req: {}", currentUser.getId(), workId);
+
+        workService.delete(currentUser.getId(), workId);
 
         return ResponseEntity.ok().build();
 
