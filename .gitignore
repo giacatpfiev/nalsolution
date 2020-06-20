@@ -14,6 +14,7 @@ target/
 .sts4-cache
 
 _logs
+**/src/main/resources/firebase/**
 
 ### IntelliJ IDEA ###
 .idea

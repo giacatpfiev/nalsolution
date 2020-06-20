@@ -28,8 +28,6 @@ public class Account {
     @NaturalId
     private String email;
 
-    private String password;
-
     private String displayedName;
 
     private String avatarUrl;
@@ -42,7 +40,6 @@ public class Account {
         return "Account{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
                 ", displayedName='" + displayedName + '\'' +
                 ", avatarUrl='" + avatarUrl + '\'' +
                 '}';

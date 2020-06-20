@@ -16,8 +16,6 @@ public class ResponseAccount {
 
     private String email;
 
-    private String password;
-
     private String displayedName;
 
     private String avatarUrl;
@@ -27,7 +25,6 @@ public class ResponseAccount {
         return "ResponseAccount{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
                 ", displayedName='" + displayedName + '\'' +
                 ", avatarUrl='" + avatarUrl + '\'' +
                 '}';

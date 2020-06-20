@@ -36,6 +36,10 @@ public class Work {
     @JoinColumn(name = "account_id")
     private Account account;
 
+    public Long getOwnerId() {
+       return Objects.nonNull(account) ? account.getId() : null;
+    }
+
     @Override
     public String toString() {
         return "Work{" +
@@ -44,7 +48,7 @@ public class Work {
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", status=" + status +
-                ", accountID=" + (Objects.nonNull(account) ? account.getId() : "none") +
+                ", accountID=" + getOwnerId() +
                 '}';
     }
 }

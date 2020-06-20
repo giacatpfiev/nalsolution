@@ -24,8 +24,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Modifying
     @Query( "UPDATE Account ac " +
             "SET ac.displayedName = :#{#account.displayedName}" +
-            ", ac.avatarUrl = :#{#account.avatarUrl}" +
-            ", ac.password = :#{#account.password} " +
+            ", ac.avatarUrl = :#{#account.avatarUrl} " +
             "WHERE ac.id = :#{#account.id}"
     )
     int update(@Param("account") Account account);

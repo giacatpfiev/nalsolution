@@ -20,7 +20,6 @@ public class AccountMapperTest {
         requestAccount.setAvatarUrl(name);
         requestAccount.setDisplayedName(name);
         requestAccount.setEmail(name);
-        requestAccount.setPassword(name);
 
         Account account = AccountMapper.INSTANCE.map(requestAccount);
         log.info("AccountMapperTest -> mapFromReq. {}", account);
@@ -34,7 +33,6 @@ public class AccountMapperTest {
                 .avatarUrl(name)
                 .displayedName(name)
                 .email(name)
-                .password(name)
                 .build();
         ResponseAccount responseAccount = AccountMapper.INSTANCE.map(account);
         log.info("AccountMapperTest -> mapToRes. {}", responseAccount);

@@ -19,7 +19,9 @@ public interface WorkService {
      */
     Work create(Long uId, Work work);
 
-    int update(Work work);
+    int update(Long uId, Work work);
+
+    Work findByIdAndAccountId(Long id, Long accountId);
 
     Work findById(Long id);
 
@@ -27,6 +29,6 @@ public interface WorkService {
 
     List<Work> getAllByUID(Long uId);
 
-    int delete(Long id);
+    int delete(Long uId, Long id);
 
 }

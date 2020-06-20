@@ -32,7 +32,6 @@ public class AccountServiceTest {
         log.info("AccountServiceTest -> findByIdWithExistedAccount. ======= INIT DATA ========");
         Account account = Account.builder()
                 .displayedName("test findByIdWithExistedAccount displayedName")
-                .password("test findByIdWithExistedAccount password")
                 .email("test findByIdWithExistedAccount email")
                 .build();
 
@@ -55,7 +54,6 @@ public class AccountServiceTest {
         log.info("AccountServiceTest -> findByEmailWithExistedAccount. ======= INIT DATA ========");
         Account account = Account.builder()
                 .displayedName("test findByEmailWithExistedAccount displayedName")
-                .password("test findByEmailWithExistedAccount password")
                 .email("test findByEmailWithExistedAccount email")
                 .build();
 
@@ -78,7 +76,6 @@ public class AccountServiceTest {
         log.info("AccountServiceTest -> updateExistedAccount. ======= INIT DATA ========");
         Account initAccount = Account.builder()
                 .displayedName("test updateExistedAccount displayedName")
-                .password("test updateExistedAccount password")
                 .email("test updateExistedAccount email")
                 .build();
 
@@ -95,7 +92,6 @@ public class AccountServiceTest {
         Account account = Account.builder()
                 .email("this email will not be changed!!!!")
                 .displayedName(displayedName)
-                .password(password)
                 .avatarUrl(avatarUrl)
                 .id(id)
                 .build();
@@ -106,7 +102,6 @@ public class AccountServiceTest {
 
         Assert.assertEquals(1, numChanged);
         Assert.assertEquals(email, updatedAccount.getEmail());
-        Assert.assertEquals(password, updatedAccount.getPassword());
         Assert.assertEquals(avatarUrl, updatedAccount.getAvatarUrl());
         Assert.assertEquals(displayedName, updatedAccount.getDisplayedName());
     }

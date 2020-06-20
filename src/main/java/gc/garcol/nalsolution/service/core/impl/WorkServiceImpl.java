@@ -3,6 +3,7 @@ package gc.garcol.nalsolution.service.core.impl;
 import gc.garcol.nalsolution.entity.Account;
 import gc.garcol.nalsolution.entity.Work;
 import gc.garcol.nalsolution.enums.page.OrderBy;
+import gc.garcol.nalsolution.exception.BadRequestException;
 import gc.garcol.nalsolution.exception.NotFoundException;
 import gc.garcol.nalsolution.manager.IDGeneratorManager;
 import gc.garcol.nalsolution.repository.WorkRepository;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static gc.garcol.nalsolution.utils.Assert.ASSERT;
 import static gc.garcol.nalsolution.utils.PanigationUtil.PAGINATION;
 
 /**
@@ -53,8 +55,25 @@ public class WorkServiceImpl implements WorkService {
     }
 
     @Override
-    public int update(Work work) {
-        return workRepository.update(work);
+    public int update(Long uId, Work work) {
+        int effectedRow = workRepository.update(uId, work);
+
+        if (ASSERT.isZero(effectedRow)) {
+            throw new BadRequestException("Updating User " + uId + " does not own work " + work.getId() + "!!");
+        }
+
+        return effectedRow;
+    }
+
+    @Override
+    public Work findByIdAndAccountId(Long id, Long accountId) {
+        Optional<Work> workOpt = workRepository.findByIdAndAccountId(id, accountId);
+        return workOpt
+                .orElseThrow(
+                        () -> new NotFoundException(
+                                "WorkServiceImpl -> findById. Message - id: " + id
+                                        + ", accountId: " + accountId)
+                );
     }
 
     @Override
@@ -82,8 +101,14 @@ public class WorkServiceImpl implements WorkService {
     }
 
     @Override
-    public int delete(Long id) {
-        return workRepository.delete(id);
+    public int delete(Long uId, Long id) {
+        int effectRows = workRepository.delete(uId, id);
+
+        if (ASSERT.isZero(effectRows)) {
+            throw new BadRequestException("Deleting User " + uId + " does not own work " + id + "!!");
+        }
+
+        return effectRows;
     }
 
 }

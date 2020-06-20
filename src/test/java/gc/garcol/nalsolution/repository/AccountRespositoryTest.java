@@ -37,12 +37,7 @@ public class AccountRespositoryTest {
                 .avatarUrl("updateAccount avatarURL")
                 .displayedName("updateAccount displayedName")
                 .email(email)
-                .password("updateAccount password")
                 .build();
-
-//        commonRepositoryService.runInTransaction(() -> {
-//            accountRepository.save(initAccount);
-//        });
 
         commonRepositoryService.runInSession(session -> {
             session.persist(initAccount);
@@ -57,7 +52,6 @@ public class AccountRespositoryTest {
         Account account = Account.builder()
                 .id(accountId)
                 .avatarUrl(avatarUrl)
-                .password(password)
                 .displayedName(displayedName)
                 .build();
 
@@ -70,7 +64,6 @@ public class AccountRespositoryTest {
         Assert.assertEquals(email, persistedAccount.getEmail());
         Assert.assertEquals(avatarUrl, persistedAccount.getAvatarUrl());
         Assert.assertEquals(displayedName, persistedAccount.getDisplayedName());
-        Assert.assertEquals(password, persistedAccount.getPassword());
     }
 
 }

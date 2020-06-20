@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 /**
  * @author thai-van
  **/
@@ -33,18 +35,28 @@ public interface WorkRepository extends JpaRepository<Work, Long> {
                     "SET w.name = :#{#work.name}" +
                     ", w.startTime = :#{#work.startTime}" +
                     ", w.endTime = :#{#work.endTime} " +
-                    "WHERE w.id = :#{#work.id}"
+                    "WHERE w.id = :#{#work.id} " +
+                    "AND w.account.id = :accountId"
     )
-    int update(@Param("work") Work work);
+    int update(@Param("accountId") Long accountId, @Param("work") Work work);
 
     /**
-     * Delete by work id
      *
+     * @param id
+     * @param accountId
+     * @return
+     */
+    Optional<Work> findByIdAndAccountId(Long id, Long accountId);
+
+    /**
+     * Delete by work id and ownerId
+     *
+     * @param uId
      * @param id
      * @return number of changed data.
      */
     @Modifying
-    @Query("DELETE FROM Work w WHERE w.id = ?1")
-    int delete(Long id);
+    @Query("DELETE FROM Work w WHERE w.account.id = ?1 AND w.id = ?2")
+    int delete(Long uId, Long id);
 
 }

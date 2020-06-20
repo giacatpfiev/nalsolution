@@ -44,7 +44,6 @@ public class WorkServiceTest {
                 .displayedName(baseName)
                 .email(baseName)
                 .avatarUrl(baseName)
-                .password(baseName)
                 .build();
 
         return accountService.create(account);
@@ -104,13 +103,24 @@ public class WorkServiceTest {
 
         log.info("WorkServiceTest -> findById. ========== TEST ==========");
         Work work = workService.findById(id);
-        log.info("WorkServiceTest -> findById. {}", work);
+        log.info("WorkServiceTest -> findById. work: {}, accountId: {}", work, work.getAccount().getId());
     }
 
     @Test(expected = NotFoundException.class)
     public void findNotExistedWork() {
         log.info("WorkServiceTest -> findNotExistedWork. ========== TEST ==========");
         Work work = workService.findById(-1L);
+    }
+
+    @Test
+    public void findByIdAndAccountId() {
+        Work initWork = createWork("WorkServiceTest -> findByIdAndAccountId");
+        Long id = initWork.getId();
+        Long accountId = initWork.getOwnerId();
+
+        log.info("WorkServiceTest -> findByIdAndAccountId. ========== TEST ==========");
+        Work work = workService.findByIdAndAccountId(id, accountId);
+        log.info("WorkServiceTest -> findByIdAndAccountId. work: {}, accountId: {}", work, work.getAccount().getId());
     }
 
     @Test
@@ -132,7 +142,7 @@ public class WorkServiceTest {
                 .status(status)
                 .build();
 
-        int changed = workService.update(work);
+        int changed = workService.update(initWork.getOwnerId(), work);
 
         Work updatedWork = workService.findById(work.getId());
 
@@ -142,7 +152,30 @@ public class WorkServiceTest {
         Assert.assertEquals(endTime, updatedWork.getEndTime());
     }
 
-    @Test
+    @Test(expected = BadRequestException.class)
+    public void updateNotOwnWork() {
+        String baseName = "WorkServiceTest -> updateNotOwnWork";
+        Work initWork = createWork(baseName);
+
+        log.info(baseName, "======== TEST =======");
+        String name = "new name";
+        Timestamp startTime = new Timestamp(1_000_000L);
+        Timestamp endTime = new Timestamp(2_000_000L);
+        WorkStatus status = WorkStatus.COMPLETE;
+
+        Work work = Work.builder()
+                .id(initWork.getId())
+                .endTime(endTime)
+                .startTime(startTime)
+                .name(name)
+                .status(status)
+                .build();
+
+        int changed = workService.update(-1L, work);
+//        Assert.assertEquals(0, changed);
+    }
+
+    @Test(expected = BadRequestException.class)
     public void updateNotExistWork() {
 
         String name = "new name";
@@ -158,9 +191,9 @@ public class WorkServiceTest {
                 .status(status)
                 .build();
 
-        int changed = workService.update(work);
+        int changed = workService.update(-1L, work);
 
-        Assert.assertEquals(0, changed);
+//        Assert.assertEquals(0, changed);
 
     }
 
@@ -209,8 +242,16 @@ public class WorkServiceTest {
         String baseName =  "WorkServiceTest -> deleteWork";
         Work work = createWork(baseName);
 
-        int changed = workService.delete(work.getId());
+        int changed = workService.delete(work.getOwnerId(), work.getId());
         Assert.assertEquals(1, changed);
+    }
+
+    @Test(expected = BadRequestException.class)
+    public void deleteNotOwnWork() {
+        String baseName =  "WorkServiceTest -> deleteNotOwnWork";
+        Work work = createWork(baseName);
+
+        int changed = workService.delete(-1L, work.getId());
     }
 
 }
