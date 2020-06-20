@@ -1,6 +1,7 @@
 package gc.garcol.nalsolution.service;
 
 import gc.garcol.nalsolution._configuration.NalsolutionApplicationTest;
+import gc.garcol.nalsolution.authentication.UserDetailServiceImpl;
 import gc.garcol.nalsolution.entity.Account;
 import gc.garcol.nalsolution.exception.NotFoundException;
 import gc.garcol.nalsolution.repository.AccountRepository;
@@ -27,6 +28,8 @@ public class AccountServiceTest {
 
     @Autowired private AccountRepository accountRepository;
 
+    @Autowired private UserDetailServiceImpl userDetailService;
+
     @Test
     public void findByIdWithExistedAccount() {
         log.info("AccountServiceTest -> findByIdWithExistedAccount. ======= INIT DATA ========");
@@ -41,6 +44,11 @@ public class AccountServiceTest {
         Long id = account.getId();
         Account persistedAccount = accountService.findById(id);
         Account persistedAccount1 = accountService.findById(id);
+        Account persistedAccount2 = accountService.findByEmail("test findByIdWithExistedAccount email");
+        Account persistedAccount3 = accountService.findByEmail("test findByIdWithExistedAccount email");
+        userDetailService.loadUserByUsername("test findByIdWithExistedAccount email");
+        userDetailService.loadUserByUsername("test findByIdWithExistedAccount email");
+        userDetailService.loadUserByUsername("test findByIdWithExistedAccount email");
         Assert.assertNotNull(persistedAccount);
     }
 

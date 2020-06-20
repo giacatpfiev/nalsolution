@@ -3,18 +3,12 @@ package gc.garcol.nalsolution.configuration.cache;
 /**
  * @author thai-van
  **/
-public enum CacheName {
-    ACCOUNT_ID("ACCOUNT_ID"),
-    ACCOUNT_EMAIL("ACCOUNT_EMAIL"),
-    WORK("WORK");
+public class CacheName {
 
-    String value;
-    CacheName(String value) {
-        this.value = value;
-    }
+    public static final String ACCOUNT_ID = "ACCOUNT_ID";
 
-    public String getValue() {
-        return value;
-    }
+    public static final String ACCOUNT_EMAIL = "ACCOUNT_EMAIL";
+
+    public static final String WORK = "WORK";
 
 }

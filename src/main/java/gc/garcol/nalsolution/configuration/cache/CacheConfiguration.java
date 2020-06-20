@@ -6,11 +6,13 @@ import com.github.benmanes.caffeine.cache.RemovalListener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
@@ -19,6 +21,7 @@ import java.util.concurrent.TimeUnit;
  * @author thai-van
  **/
 @Slf4j
+@EnableCaching
 @Configuration
 @PropertySource("classpath:cache.properties")
 public class CacheConfiguration {
@@ -34,9 +37,18 @@ public class CacheConfiguration {
 
     @Bean
     public CacheManager cacheManager() {
-        Object[] cacheObjs = Arrays.asList(CacheName.values())
+
+        Field[] fields = CacheName.class.getDeclaredFields();
+
+        Object[] cacheObjs = Arrays.asList(fields)
                                 .stream()
-                                .map(cacheName -> cacheName.toString())
+                                .map(field -> {
+                                    try {
+                                        return field.get(null);
+                                    } catch (IllegalAccessException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                })
                                 .toArray();
 
         String[] cacheNames = Arrays.copyOf(cacheObjs, cacheObjs.length, String[].class);

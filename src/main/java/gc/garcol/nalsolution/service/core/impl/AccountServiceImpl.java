@@ -1,5 +1,6 @@
 package gc.garcol.nalsolution.service.core.impl;
 
+import gc.garcol.nalsolution.configuration.cache.CacheName;
 import gc.garcol.nalsolution.entity.Account;
 import gc.garcol.nalsolution.exception.NotFoundException;
 import gc.garcol.nalsolution.manager.IDGeneratorManager;
@@ -8,7 +9,10 @@ import gc.garcol.nalsolution.service.CommonRepositoryService;
 import gc.garcol.nalsolution.service.core.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.*;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,11 +25,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-@CacheConfig(cacheNames = {"ACCOUNT_ID", "ACCOUNT_EMAIL"})
 public class AccountServiceImpl implements AccountService {
 
-    static final String CACHE_ID = "ACCOUNT_ID";
-    static final String CACHE_EMAIL = "ACCOUNT_EMAIL";
+    static final String CACHE_ID = CacheName.ACCOUNT_ID;
+    static final String CACHE_EMAIL = CacheName.ACCOUNT_EMAIL;
 
     private final IDGeneratorManager idGeneratorManager;
 
