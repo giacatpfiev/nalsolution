@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Timestamp;
@@ -179,7 +180,9 @@ public class WorkServiceTest {
         OrderBy orderBy = OrderBy.DES;
         String sortBy = "name";
 
-        List<Work> works = workService.getSomeByUID(accountId, pageIndex, pageSize, sortBy, orderBy).toList();
+        Page<Work> workPage = workService.getSomeByUID(accountId, pageIndex, pageSize, sortBy, orderBy);
+
+        List<Work> works = workPage.toList();
 
         int size = works.size();
         for (int i = 0; i < size - 1; i++) {
@@ -188,7 +191,7 @@ public class WorkServiceTest {
             Assert.assertTrue(preWorkName.compareTo(afterWorkName) == 1);
         }
 
-        log.info("[RESULT] {}: {}", baseName, works);
+        log.info("[RESULT] {}: {} -> {}", baseName, workPage, works);
     }
 
     @Test(expected = BadRequestException.class)
