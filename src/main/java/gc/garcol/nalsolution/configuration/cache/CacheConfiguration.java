@@ -42,13 +42,7 @@ public class CacheConfiguration {
 
         Object[] cacheObjs = Arrays.asList(fields)
                                 .stream()
-                                .map(field -> {
-                                    try {
-                                        return field.get(null);
-                                    } catch (IllegalAccessException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                })
+                                .map(field -> getFieldValue(field))
                                 .toArray();
 
         String[] cacheNames = Arrays.copyOf(cacheObjs, cacheObjs.length, String[].class);
@@ -57,6 +51,14 @@ public class CacheConfiguration {
         cacheManager.setAllowNullValues(false);
         cacheManager.setCaffeine(caffeineCacheBuilder());
         return cacheManager;
+    }
+
+    private Object getFieldValue(Field field) {
+        try {
+            return field.get(null);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     Caffeine<Object, Object> caffeineCacheBuilder() {

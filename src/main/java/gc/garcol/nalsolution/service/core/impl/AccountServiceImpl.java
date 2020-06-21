@@ -54,7 +54,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @CacheEvict(cacheNames = CACHE_ID, key = "#account.id")
+    @CachePut(cacheNames = CACHE_ID, key = "#account.id")
     public int update(Account account) {
 
         int changed = accountRepository.update(account);
@@ -77,7 +77,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @Cacheable(cacheNames = CACHE_EMAIL, unless = "#result == null", key = "#email")
+    @Cacheable(cacheNames = CACHE_EMAIL, unless = "#result == null", key = "#email.toString()")
     public Account findByEmail(String email) {
         Optional<Account> accountOpt = accountRepository.findAccountByEmail(email);
         return accountOpt
