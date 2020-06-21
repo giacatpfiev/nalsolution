@@ -20,6 +20,8 @@ public interface AccountService {
 
     Account findByEmail(String email);
 
+    Account getByEmail(String email);
+
     boolean existedAccount(Long id);
 
     boolean existedAccount(String email);

@@ -1,5 +1,6 @@
 package gc.garcol.nalsolution.service.core.impl;
 
+import gc.garcol.nalsolution.cache.impl.AccountLRURepository;
 import gc.garcol.nalsolution.configuration.cache.CacheName;
 import gc.garcol.nalsolution.entity.Account;
 import gc.garcol.nalsolution.exception.NotFoundException;
@@ -18,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static gc.garcol.nalsolution.utils.Assert.ASSERT;
+
 /**
  * @author thai-van
  **/
@@ -35,6 +38,8 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
 
     private final CommonRepositoryService commonRepositoryService;
+
+    private final AccountLRURepository accountLRURepository;
 
     @Override
     @Caching(put = {
@@ -77,7 +82,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @Cacheable(cacheNames = CACHE_EMAIL, unless = "#result == null", key = "#email.toString()")
+    @Cacheable(cacheNames = CACHE_EMAIL, unless = "#result == null", key = "#email")
     public Account findByEmail(String email) {
         Optional<Account> accountOpt = accountRepository.findAccountByEmail(email);
         return accountOpt
@@ -86,6 +91,32 @@ public class AccountServiceImpl implements AccountService {
                                 "AccountServiceImpl -> findByEmail. Message - email: " + email
                         )
                 );
+    }
+
+    @Override
+    public Account getByEmail(String email) {
+
+        Account account = accountLRURepository.findById(email);
+
+        if (ASSERT.cacheHit(account)) return account;
+
+        return accountLRURepository.callInLock(email, () -> {
+            Account rereadAccount = accountLRURepository.findById(email);
+
+            if (ASSERT.cacheHit(rereadAccount)) return account;
+
+            Optional<Account> accountDBOpt = accountRepository.findAccountByEmail(email);
+
+            if (ASSERT.databaseMiss(accountDBOpt)) {
+                throw new NotFoundException("AccountServiceImpl -> findByEmail. Message - email: " + email);
+            }
+
+            Account result = accountDBOpt.get();
+            accountLRURepository.save(email, result);
+
+            return result;
+        });
+
     }
 
     @Override
