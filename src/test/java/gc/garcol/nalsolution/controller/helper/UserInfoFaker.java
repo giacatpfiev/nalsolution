@@ -48,4 +48,15 @@ public class UserInfoFaker implements UserInfo {
     public String getProviderId() {
         return providerId;
     }
+
+    public static UserInfoFaker buildFaker(String basicName) {
+        return UserInfoFaker.builder()
+                .displayName(basicName)
+                .email(basicName)
+                .photoUrl(basicName)
+                .phoneNumber(basicName)
+                .providerId(basicName)
+                .uid(basicName)
+                .build();
+    }
 }

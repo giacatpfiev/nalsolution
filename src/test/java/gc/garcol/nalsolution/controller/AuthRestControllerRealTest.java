@@ -39,24 +39,13 @@ public class AuthRestControllerRealTest {
     @MockBean
     private FirebaseService firebaseService;
 
-    private UserInfoFaker buildFaker(String basicName) {
-        return UserInfoFaker.builder()
-                .displayName(basicName)
-                .email(basicName)
-                .photoUrl(basicName)
-                .phoneNumber(basicName)
-                .providerId(basicName)
-                .uid(basicName)
-                .build();
-    }
-
     @SneakyThrows
     @Test
     public void testSignInWithValidTokenId() {
 
         when(firebaseService.extractUserInfo(any(String.class)))
                 .thenReturn(
-                     buildFaker("AuthRestControllerRealTest -> testSignInWithValidTokenId")
+                        UserInfoFaker.buildFaker("AuthRestControllerRealTest -> testSignInWithValidTokenId")
                 );
 
         RequestSocialSignIn req  = new RequestSocialSignIn();
