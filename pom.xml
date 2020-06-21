@@ -27,6 +27,7 @@
         <jackson.version>2.9.8</jackson.version>
         <firebase.version>6.12.2</firebase.version>
         <caffeine.version>2.8.4</caffeine.version>
+        <mysql.version>8.0.20</mysql.version>
     </properties>
 
     <dependencies>
@@ -60,6 +61,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
