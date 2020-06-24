@@ -103,7 +103,7 @@ public class AccountServiceImpl implements AccountService {
         return accountLRURepository.callInLock(email, () -> {
             Account rereadAccount = accountLRURepository.findById(email);
 
-            if (ASSERT.cacheHit(rereadAccount)) return account;
+            if (ASSERT.cacheHit(rereadAccount)) return rereadAccount;
 
             Optional<Account> accountDBOpt = accountRepository.findAccountByEmail(email);
 
